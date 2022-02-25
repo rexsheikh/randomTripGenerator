@@ -97,12 +97,6 @@ def random_trip_generator():
         current[2] = restaurant()
     elif 'transporation' in changes:
         current[3] = transpo()
-    else:
-        print(f'great. enjoy the following trip \n \
-            destination: {current[0]} \n \
-            entertainment: {current[1]} \n \
-            restaurant: {current[2]} \n \
-            transportation: {current[3]} \n')
     return print(f'Here is your final itinerary \n \
         destination: {current[0]} \n \
         entertainment: {current[1]} \n \
@@ -110,6 +104,7 @@ def random_trip_generator():
         transportation: {current[3]}' )
 
         
-random_trip_generator()
+random_trip_generator() 
     
+
 
