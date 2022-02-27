@@ -30,81 +30,90 @@
 
 import random
 
-
 guide = {
-    'cities': ['philadelphia', 'chicago', 'denver', 'nyc', 'austin', 'seattle'],
+    'city': ['philadelphia', 'chicago', 'denver', 'nyc', 'austin', 'seattle'],
     'restaurants': ['steakhouse', 'sushi', 'fast food', 'pizza', 'five star restaurant'],
     'entertainment': ['live music', 'city tour', 'hike', 'museum'],
     'transportation': ['rental car', 'public transportation','uber', 'bike rental']
 }
 
+selection = {}
 
 def while_validation(ans,list):
-    new_choice = random.choice(list)
-    while(ans != 'y'):
-        new_choice = random.choice(list)
-        ans = input(f'What about {new_choice}? y/n: ')
-    print('great. let\'s move on.')
-    return new_choice
+    if ans == 'y':
+        return None
+    else:
+        while(ans != 'y'):
+         new_choice = random.choice(list)
+         ans = input(f'What about {new_choice}? y/n: ')
+        return new_choice
 
+def if_validation(original,change):
+    if change == None:
+        return original 
+    else: 
+        original = change
+        return original
 
 def destination():
-    user_dest = random.choice(guide['cities'])
-    ans_dest = input(f'your destination is {user_dest}. Is this acceptable? y/n: ')
-    user_dest = while_validation(ans_dest,guide['cities'])
-    return user_dest
+    rand_dest = random.choice(guide['city'])
+    user_choice_dest = input(f'your destination is {rand_dest}. Is this acceptable? y/n: ')
+    change = while_validation(user_choice_dest,guide['city'])
+    dest_selection = if_validation(rand_dest,change)
+    selection['city'] = dest_selection
+    return dest_selection
 
 def transpo():
-    user_transpo = random.choice(guide['transportation'])
-    ans_transpo = input(f'your transportation is {user_transpo}. Is this acceptable? y/n: ')
-    user_transpo = while_validation(ans_transpo,guide['transportation'])
-    return user_transpo
+    rand_transpo = random.choice(guide['transportation'])
+    user_choice_transpo = input(f'your transportation is {rand_transpo}. Is this acceptable? y/n: ')
+    change = while_validation(user_choice_transpo,guide['transportation'])
+    transpo_selection = if_validation(rand_transpo,change)
+    selection['transportation'] = transpo_selection
+    return transpo_selection
 
 def entertainment():
-    user_ent = random.choice(guide['entertainment'])
-    ans_ent = input(f'your entertainment is {user_ent}. Is this acceptable? y/n: ')
-    user_transpo = while_validation(ans_ent,guide['entertainment'])
-    return user_ent
+    rand_ent = random.choice(guide['entertainment'])
+    user_choice_ent = input(f'your entertainment is {rand_ent}. Is this acceptable? y/n: ')
+    change = while_validation(user_choice_ent,guide['entertainment'])
+    ent_selection = if_validation(rand_ent,change)
+    selection['entertainment'] = ent_selection
+    return ent_selection
 
 def restaurant():
-    user_rest = random.choice(guide['restaurants'])
-    ans_rest = input(f'your restaurant is {user_rest}. Is this acceptable? y/n: ')
-    user_rest = while_validation(ans_rest,guide['restaurants'])
-    return user_rest
+    rand_rest = random.choice(guide['restaurants'])
+    user_choice_rest = input(f'your restaurant is {rand_rest}. Is this acceptable? y/n: ')
+    change = while_validation(user_choice_rest,guide['restaurants'])
+    rest_selection = if_validation(rand_rest,change)
+    selection['restaurant'] = rest_selection
+    return rest_selection
 
-def first_selection():
-    first_dest = destination()
-    first_transpo = transpo()
-    first_ent = entertainment()
-    first_rest = restaurant()
-    first_list = [first_dest,first_ent, first_rest, first_transpo]
-    validate = input(f'Here is your itinerary \n \
-        destination: {first_dest} \n \
-        entertainment: {first_ent} \n \
-        restaurant: {first_rest} \n \
-        transportation: {first_transpo} \n \
-        is there anything you want to change? \
-        If so, select cities, transporation, entertainment, and/or restaurant separated by commas. If there are no changes, enter none: ').split(',')
-    return first_list, validate
+functions = {
+    'city' : destination,
+    'restaurant' : restaurant,
+    'entertainment' : entertainment,
+    'transportation' : transpo,
+}
+
+
+def first_selection ():
+    destination()
+    entertainment()
+    transpo()
+    restaurant()
+    changes = input(f'Your current selection is\
+        \n{selection}.\nIs there anything you would like to change?\
+        \nSelect city, entertainment, transportation, or restaurant separated by a single comma.\
+        \nIf you are happy with you selection, select agree: ').split(',')
+    return changes
+
 
 def random_trip_generator():
-    current,changes = first_selection()
-    if 'cities' in changes:
-        current[0] = destination()
-    elif 'entertainment' in changes:
-        current[1] = entertainment()
-    elif 'restaurant' in changes:
-        current[2] = restaurant()
-    elif 'transporation' in changes:
-        current[3] = transpo()
-    return print(f'Here is your final itinerary \n \
-        destination: {current[0]} \n \
-        entertainment: {current[1]} \n \
-        restaurant: {current[2]} \n \
-        transportation: {current[3]}' )
+    changes = first_selection()
+    if len(changes) == 1 and 'agree' in changes:
+        print(f'Great, enjoy the following trip:\n{selection}')
+    else:
+        for i in range(0,len(changes)):
+            selection[changes[i]] = functions[changes[i]]()
+        print(f'here is your updated itinerary:\n{selection}')
 
-        
-random_trip_generator() 
-    
-
-
+random_trip_generator()
